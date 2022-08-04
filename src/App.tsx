@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import './App.css';
-import {TaskType, Todolist} from "./Todolist";
+import {Todolist} from "./Todolist";
 
 function App() {
 
@@ -12,7 +12,7 @@ function App() {
     ]);
 
     const removeTask = (taskID: number) => {
-        setTasks(tasks.filter((el) => el.id!==taskID))
+        setTasks(tasks.filter((el) => el.id !== taskID))
     }
 
     return (
