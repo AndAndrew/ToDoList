@@ -18,11 +18,18 @@ function App() {
     const addTask = (newTitle: string) => {
         const newTask = {id: v1(), title: newTitle, isDone: true};
         setTasks([newTask, ...tasks]);
-
     }
 
     const removeTask = (taskID: string) => {
-        setTasks(tasks.filter((el) => el.id !== taskID))
+        setTasks(tasks.filter((el) => el.id !== taskID));
+    }
+
+    const changeTaskStatus = (taskId: string, isDone: boolean) => {
+        let task = tasks.find(t => t.id === taskId);
+        if (task) {
+            task.isDone = isDone
+        }
+        setTasks([...tasks]);
     }
 
     const [filter, setFilter] = useState<FilterValuesType>('All')
@@ -47,6 +54,7 @@ function App() {
                 removeTask={removeTask}
                 changeFilter={changeFilter}
                 addTask={addTask}
+                changeStatus={changeTaskStatus}
             />
         </div>
     );
