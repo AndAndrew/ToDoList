@@ -1,10 +1,12 @@
 import React from "react";
 import {FilterValuesType} from "./App";
-import {Button} from "./components/Button";
+import {UniversalButton} from "./components/UniversalButton";
 import s from './TodoList.module.css';
 import {CheckBox} from "./components/CheckBox";
 import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
+import {IconButton} from "@mui/material";
+import {Delete} from "@material-ui/icons";
 
 export type TaskType = {
     id: string
@@ -58,7 +60,10 @@ export const TodoList = (props: PropsType) => {
         <div>
             <h3>
                 <EditableSpan title={props.title} callBack={updateTodoListHandler}/>
-            <button onClick={removeTodoList}>x</button>
+                <IconButton aria-label="delete" onClick={removeTodoList}>
+                    <Delete/>
+                </IconButton>
+                {/*<button onClick={removeTodoList}>x</button>*/}
             </h3>
             <AddItemForm callBack={addTaskHandler}/>
             <ul>
@@ -66,32 +71,35 @@ export const TodoList = (props: PropsType) => {
                     props.tasks.map((t) => {
                         return (
                             <li key={t.id} className={t.isDone ? s.isDone : ''}>
-                                <Button callBack={() => {
-                                    removeTaskHandler(t.id, props.todoListID)
-                                }} nickName={'X'}/>
+                                <UniversalButton variant={'contained'}
+                                                 callBack={() => {
+                                                     removeTaskHandler(t.id, props.todoListID)
+                                                 }} nickName={'X'}/>
 
-                                <CheckBox isDone={t.isDone} callBack={(isDone) => changeIsDoneHandler(t.id, isDone, props.todoListID)}/>
-                                <EditableSpan title={t.title} callBack={(newTitle) => updateTaskHandler(t.id, newTitle)}/>
+                                <CheckBox isDone={t.isDone}
+                                          callBack={(isDone) => changeIsDoneHandler(t.id, isDone, props.todoListID)}/>
+                                <EditableSpan title={t.title}
+                                              callBack={(newTitle) => updateTaskHandler(t.id, newTitle)}/>
                             </li>
                         )
                     })}
             </ul>
             <div>
-                <Button className={props.filter === 'All' ? s.activeFilter : ''}
-                        callBack={() => {
-                            filterHandler('All')
-                        }}
-                        nickName={'all'}/>
-                <Button className={props.filter === 'Active' ? s.activeFilter : ''}
-                        callBack={() => {
-                            filterHandler('Active')
-                        }}
-                        nickName={'active'}/>
-                <Button className={props.filter === 'Completed' ? s.activeFilter : ''}
-                        callBack={() => {
-                            filterHandler('Completed')
-                        }}
-                        nickName={'completed'}/>
+                <UniversalButton variant={'contained'} className={props.filter === 'All' ? s.activeFilter : ''}
+                                 callBack={() => {
+                                     filterHandler('All')
+                                 }}
+                                 nickName={'all'}/>
+                <UniversalButton variant={'contained'} className={props.filter === 'Active' ? s.activeFilter : ''}
+                                 callBack={() => {
+                                     filterHandler('Active')
+                                 }}
+                                 nickName={'active'}/>
+                <UniversalButton variant={'contained'} className={props.filter === 'Completed' ? s.activeFilter : ''}
+                                 callBack={() => {
+                                     filterHandler('Completed')
+                                 }}
+                                 nickName={'completed'}/>
             </div>
         </div>
     );
