@@ -6,10 +6,8 @@ import {AddItemForm} from "./components/AddItemForm";
 import ButtonAppBar from "./components/ButtonAppBar";
 import {Container, Grid, Paper} from "@mui/material";
 import {
-    addNewTasksArrayAC,
     addTaskAC, changeTaskStatusAC,
     removeTaskAC,
-    removeTasksArrayAC,
     tasksReducer, updateTaskAC
 } from "./reducers/tasksReducer";
 import {
@@ -59,7 +57,6 @@ function App() {
         // setTodoLists(todoLists.filter(el => el.id !== todoListId))
         // delete tasks[todoListId]
         dispatchTodoLists(removeTodoListAC(todoListId));
-        dispatchTasks(removeTasksArrayAC(todoListId));
     }
 
     const addTask = (newTitle: string, todoListId: string) => {
@@ -77,8 +74,7 @@ function App() {
         // const newTodoList: TodoListType = {id: newTodoListId, title: newTitle, filter: 'All'}
         // setTodoLists([newTodoList, ...todoLists])
         // setTasks({[newTodoListId]: [], ...tasks})
-        dispatchTodoLists(addTodoListAC(newTodoListId, newTitle));
-        dispatchTasks(addNewTasksArrayAC(newTodoListId));
+        dispatchTodoLists(addTodoListAC(newTitle));
     }
 
     const updateTask = (todoListId: string, taskID: string, newTitle: string) => {

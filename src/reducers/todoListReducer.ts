@@ -27,15 +27,15 @@ export const todoListsReducer = (state: Array<TodoListType>, action: tsarType) =
 export type tsarType = addTodoListACType | removeTodoListACType
     | updateTodoListACType | changeFilterACType
 
-type addTodoListACType = ReturnType<typeof addTodoListAC>
-export const addTodoListAC = (newTodoListId: string, newTitle: string) => {
+export type addTodoListACType = ReturnType<typeof addTodoListAC>
+export const addTodoListAC = (newTitle: string) => {
     return {
         type: "ADD-TODO-LIST",
-        payload: {newTodoListId, newTitle}
+        payload: {newTodoListId: v1(), newTitle}
     } as const
 }
 
-type removeTodoListACType = ReturnType<typeof removeTodoListAC>
+export type removeTodoListACType = ReturnType<typeof removeTodoListAC>
 export const removeTodoListAC = (todoListId: string) => {
     return {
         type: "REMOVE-TODO-LIST",
