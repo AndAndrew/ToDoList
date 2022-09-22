@@ -2,7 +2,9 @@ import {TasksStateType} from "../App";
 import {v1} from "uuid";
 import {addTodoListACType, removeTodoListACType} from "./todoListReducer";
 
-export const tasksReducer = (state: TasksStateType, action: tsarType) => {
+let initialState: TasksStateType = {}
+
+export const tasksReducer = (state: TasksStateType = initialState, action: tsarType) => {
     switch (action.type) {
         case "REMOVE-TASK":
             return {
@@ -24,6 +26,7 @@ export const tasksReducer = (state: TasksStateType, action: tsarType) => {
                     el.id === action.payload.taskId ? {...el, isDone: action.payload.isDone} : el)
             };
         case "ADD-TODO-LIST":
+            console.log("yes")
             return {[action.payload.newTodoListId]: [], ...state};
         case "REMOVE-TODO-LIST":
             const copyState = {...state};
