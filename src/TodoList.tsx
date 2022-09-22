@@ -7,6 +7,11 @@ import {AddItemForm} from "./components/AddItemForm";
 import {EditableSpan} from "./components/EditableSpan";
 import {IconButton} from "@mui/material";
 import {Delete} from "@material-ui/icons";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "./state/store";
+import {TodoListType} from "./AppWithRedux";
+import {addTaskAC, removeTaskAC} from "./reducers/tasksReducer";
+import {changeFilterAC, removeTodoListAC} from "./reducers/todoListReducer";
 
 export type TaskType = {
     id: string
@@ -16,12 +21,8 @@ export type TaskType = {
 
 type PropsType = {
     todoListID: string
-    title: string
     tasks: Array<TaskType>
-    removeTask: (taskID: string, todoListId: string) => void
-    removeTodoList: (todoListId: string) => void
-    addTask: (newTitle: string, todoListId: string) => void
-    changeFilter: (todoListID: string, filterValue: FilterValuesType) => void
+    changeFilter: (todoListID: string, filterValue: FilterValuesType) => void,
     changeTaskStatus: (taskId: string, isDone: boolean, todoListId: string) => void
     filter: FilterValuesType
     updateTask: (todoListId: string, taskID: string, newTitle: string) => void
@@ -30,8 +31,16 @@ type PropsType = {
 
 export const TodoList = (props: PropsType) => {
 
+    const todo = useSelector<AppRootStateType, TodoListType | undefined>(state => state.todoLists.find(todo => {
+        return todo && todo.id === props.todoListID
+    }));
+    const tasksTodo = useSelector<AppRootStateType, Array<TaskType>>(state => todo ? state.tasks[todo.id] : []);
+
+    const dispatch = useDispatch();
+
     const filterHandler = (filterValue: FilterValuesType) => {
         props.changeFilter(props.todoListID, filterValue);
+
     }
 
     const updateTodoListHandler = (newTitle: string) => {
@@ -43,7 +52,7 @@ export const TodoList = (props: PropsType) => {
     }
 
     const removeTaskHandler = (id: string, todoListId: string) => {
-        props.removeTask(id, todoListId);
+        dispatch(removeTaskAC(todoListId, id));
     }
 
     const changeIsDoneHandler = (taskId: string, isDone: boolean, todoListId: string) => {
@@ -51,24 +60,23 @@ export const TodoList = (props: PropsType) => {
     }
 
     const addTaskHandler = (newTitle: string) => {
-        props.addTask(newTitle, props.todoListID);
+        dispatch(addTaskAC(todo ? todo.id : '', newTitle));
     }
 
-    const removeTodoList = () => props.removeTodoList(props.todoListID);
+    const removeTodoList = () => dispatch(removeTodoListAC(props.todoListID));
 
     return (
         <div>
             <h3>
-                <EditableSpan title={props.title} callBack={updateTodoListHandler}/>
+                <EditableSpan title={todo ? todo.title : ''} callBack={updateTodoListHandler}/>
                 <IconButton aria-label="delete" onClick={removeTodoList}>
                     <Delete/>
                 </IconButton>
-                {/*<button onClick={removeTodoList}>x</button>*/}
             </h3>
             <AddItemForm callBack={addTaskHandler}/>
             <ul>
                 {
-                    props.tasks.map((t) => {
+                    tasksTodo.map((t) => {
                         return (
                             <li key={t.id} className={t.isDone ? s.isDone : ''}>
                                 <UniversalButton variant={'contained'}

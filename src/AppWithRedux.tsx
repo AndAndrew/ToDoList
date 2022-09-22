@@ -97,12 +97,8 @@ function AppWithRedux() {
                                     <TodoList
                                         key={el.id}
                                         todoListID={el.id}
-                                        title={el.title}
                                         tasks={tasksForTodolist}
-                                        removeTask={removeTask}
-                                        removeTodoList={removeTodoList}
                                         changeFilter={changeFilter}
-                                        addTask={addTask}
                                         changeTaskStatus={changeTaskStatus}
                                         filter={el.filter}
                                         updateTask={updateTask}

@@ -114,12 +114,12 @@ function AppWithReducer() {
                                     <TodoList
                                         key={el.id}
                                         todoListID={el.id}
-                                        title={el.title}
+                                        // title={el.title}
                                         tasks={tasksForTodolist}
-                                        removeTask={removeTask}
-                                        removeTodoList={removeTodoList}
+                                        // removeTask={removeTask}
+                                        // removeTodoList={removeTodoList}
                                         changeFilter={changeFilter}
-                                        addTask={addTask}
+                                        // addTask={addTask}
                                         changeTaskStatus={changeTaskStatus}
                                         filter={el.filter}
                                         updateTask={updateTask}
