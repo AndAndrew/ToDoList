@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 import s from "../TodoList.module.css";
 import {UniversalButton} from "./UniversalButton";
 import {TextField} from "@mui/material";
@@ -7,7 +7,7 @@ type PropsType = {
     callBack: (newTitle: string) => void
 }
 
-export const AddItemForm = (props: PropsType) => {
+export const AddItemForm = memo((props: PropsType) => {
 
     const {callBack} = props
     const [title, setTitle] = useState('');
@@ -19,8 +19,8 @@ export const AddItemForm = (props: PropsType) => {
     }
 
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
+        if (error) setError(false);
         if (event.key === 'Enter') {
-            setError(false);
             addTaskHandler();
         }
     }
@@ -33,7 +33,6 @@ export const AddItemForm = (props: PropsType) => {
         } else {
             setError(true);
         }
-
     }
 
     return (
@@ -56,4 +55,4 @@ export const AddItemForm = (props: PropsType) => {
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     )
-}
+})

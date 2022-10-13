@@ -99,7 +99,7 @@ function App() {
         dispatchTasks(removeTaskAC(todoListId, taskID));
     }
 
-    const changeTaskStatus = (taskId: string, isDone: boolean, todoListId: string) => {
+    const changeTaskStatus = (todoListId: string, taskId: string, isDone: boolean) => {
         // const todoListTasks = tasks[todoListId]
         // const task = todoListTasks.find(el => el.id === taskId)
         // if (task) {
@@ -140,12 +140,12 @@ function App() {
                                 <Paper style={{padding: '10px'}}>
                                     <TodoList
                                         key={el.id}
-                                        todoListID={el.id}
+                                        id={el.id}
                                         // title={el.title}
                                         tasks={tasksForTodolist}
-                                        // removeTask={removeTask}
                                         // removeTodoList={removeTodoList}
                                         changeFilter={changeFilter}
+                                        removeTask={removeTask}
                                         // addTask={addTask}
                                         changeTaskStatus={changeTaskStatus}
                                         filter={el.filter}

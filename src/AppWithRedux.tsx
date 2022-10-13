@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useCallback, useReducer} from 'react';
 import './App.css';
 import {TaskType, TodoList} from "./TodoList";
 import {v1} from "uuid";
@@ -47,28 +47,28 @@ function AppWithRedux() {
         dispatch(addTaskAC(todoListId, newTitle));
     }
 
-    const addTodoList = (newTitle: string) => {
+    const addTodoList = useCallback((newTitle: string) => {
         const action = addTodoListAC(newTitle);
         dispatch(action);
-    }
+    }, [dispatch])
 
-    const updateTask = (todoListId: string, taskID: string, newTitle: string) => {
+    const updateTask = useCallback((todoListId: string, taskID: string, newTitle: string) => {
         dispatch(updateTaskAC(todoListId, taskID, newTitle));
-    }
+    }, [dispatch])
 
-    const updateTodoList = (todoListId: string, newTitle: string) => {
+    const updateTodoList = useCallback((todoListId: string, newTitle: string) => {
         dispatch(updateTodoListAC(todoListId, newTitle));
-    }
+    }, [dispatch])
 
     const removeTask = (taskID: string, todoListId: string) => {
         dispatch(removeTaskAC(todoListId, taskID));
     }
 
-    const changeTaskStatus = (taskId: string, isDone: boolean, todoListId: string) => {
+    const changeTaskStatus = useCallback((todoListId: string, taskId: string, isDone: boolean) => {
         dispatch(changeTaskStatusAC(todoListId, taskId, isDone));
-    }
+    }, [dispatch])
 
-    function changeFilter(todoListID: string, filterValue: FilterValuesType) {
+    const changeFilter = (todoListID: string, filterValue: FilterValuesType) => {
         dispatch(changeFilterAC(todoListID, filterValue));
     }
 
@@ -81,24 +81,15 @@ function AppWithRedux() {
                 </Grid>
                 <Grid container spacing={3}>
                     {todoLists.map((el: TodoListType) => {
-
-                        const allTodoListTasks = tasks[el.id]
-                        let tasksForTodolist = allTodoListTasks;
-
-                        if (el.filter === "Active") {
-                            tasksForTodolist = allTodoListTasks.filter(t => t.isDone === false);
-                        }
-                        if (el.filter === "Completed") {
-                            tasksForTodolist = allTodoListTasks.filter(t => t.isDone === true);
-                        }
                         return (
                             <Grid item>
                                 <Paper style={{padding: '10px'}}>
                                     <TodoList
                                         key={el.id}
-                                        todoListID={el.id}
-                                        tasks={tasksForTodolist}
+                                        id={el.id}
+                                        tasks={tasks[el.id]}
                                         changeFilter={changeFilter}
+                                        removeTask={removeTask}
                                         changeTaskStatus={changeTaskStatus}
                                         filter={el.filter}
                                         updateTask={updateTask}

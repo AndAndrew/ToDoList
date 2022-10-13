@@ -26,7 +26,6 @@ export const tasksReducer = (state: TasksStateType = initialState, action: tsarT
                     el.id === action.payload.taskId ? {...el, isDone: action.payload.isDone} : el)
             };
         case "ADD-TODO-LIST":
-            console.log("yes")
             return {[action.payload.newTodoListId]: [], ...state};
         case "REMOVE-TODO-LIST":
             const copyState = {...state};

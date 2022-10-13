@@ -80,7 +80,7 @@ function AppWithReducer() {
         dispatchTasks(removeTaskAC(todoListId, taskID));
     }
 
-    const changeTaskStatus = (taskId: string, isDone: boolean, todoListId: string) => {
+    const changeTaskStatus = (todoListId: string, taskId: string, isDone: boolean) => {
         dispatchTasks(changeTaskStatusAC(todoListId, taskId, isDone));
     }
 
@@ -113,10 +113,10 @@ function AppWithReducer() {
                                 <Paper style={{padding: '10px'}}>
                                     <TodoList
                                         key={el.id}
-                                        todoListID={el.id}
+                                        id={el.id}
                                         // title={el.title}
                                         tasks={tasksForTodolist}
-                                        // removeTask={removeTask}
+                                        removeTask={removeTask}
                                         // removeTodoList={removeTodoList}
                                         changeFilter={changeFilter}
                                         // addTask={addTask}
