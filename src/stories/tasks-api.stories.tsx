@@ -1,24 +1,24 @@
 import React, {useEffect, useState} from 'react'
-import {TaskPriorities, TaskStatuses, todoListAPI, TodoListType, UpdateTodoListModelType} from "../api/todoListAPI";
+import {tasksAPI, TaskStatuses, UpdateTaskModelType} from "../api/todoListAPI";
 
 export default {
     title: 'API'
 }
 
-export const GetTodolists = () => {
+export const GetTasks = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todoListAPI.getTodoList()
+        tasksAPI.getTasks('907328af-ce0e-4d40-867c-779eef00de4c')
             .then((res) => {
                 setState(res.data);
             })
     }, [])
     return <div>{JSON.stringify(state)}</div>
 }
-export const CreateTodolist = () => {
+export const SetTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        todoListAPI.createTodoList('title')
+        tasksAPI.createTask('907328af-ce0e-4d40-867c-779eef00de4c', 'Do do')
             .then((res) => {
                 setState(res.data)
             })
@@ -26,11 +26,12 @@ export const CreateTodolist = () => {
 
     return <div>{JSON.stringify(state)}</div>
 }
-export const DeleteTodolist = () => {
+export const DeleteTask = () => {
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const todoListId = ''
-        todoListAPI.deleteTodoList(todoListId)
+        const todoListId = 'd2c1aeaa-d2be-472e-9dd9-85bfb3aefc89'
+        const taskId = '17a3e7b8-945f-4336-b401-1e7292dcdc41'
+        tasksAPI.deleteTask(todoListId, taskId)
             .then((res) => {
                 setState(res.data)
             })
@@ -38,14 +39,20 @@ export const DeleteTodolist = () => {
 
     return <div>{JSON.stringify(state)}</div>
 }
-export const UpdateTodolistTitle = () => {
-    const todoListId = ''
+export const UpdateTask = () => {
+    const todoListId = 'd2c1aeaa-d2be-472e-9dd9-85bfb3aefc89'
+    const taskId = '17a3e7b8-945f-4336-b401-1e7292dcdc41'
     const [state, setState] = useState<any>(null)
     useEffect(() => {
-        const model: UpdateTodoListModelType = {
-            title: 'newTitle'
+        const model: UpdateTaskModelType = {
+            title: 'new task',
+            startDate: '',
+            priority: 0,
+            description: '',
+            deadline: '',
+            status: TaskStatuses.New
         }
-        todoListAPI.updateTodoList(todoListId, model)
+        tasksAPI.updateTask(todoListId, taskId, model)
             .then((res) => {
                 setState(res.data)
             })

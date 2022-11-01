@@ -1,11 +1,11 @@
-import React, {memo, useCallback} from 'react';
-import {TaskType} from "../TodoList";
+import React, {memo} from 'react';
 import s from "../TodoList.module.css";
 import {UniversalButton} from "./UniversalButton";
 import {CheckBox} from "./CheckBox";
 import {EditableSpan} from "./EditableSpan";
-import {useDispatch} from "react-redux";
-import {changeTaskStatusAC, removeTaskAC, updateTaskAC} from "../reducers/tasksReducer";
+import {removeTaskTC, updateTaskTC} from "../reducers/tasksReducer";
+import {useAppDispatch} from "../app/hooks";
+import {TaskStatuses, TaskType} from "../api/todoListAPI";
 
 export type TaskWithReduxPropsType = {
     todoListId: string,
@@ -14,23 +14,26 @@ export type TaskWithReduxPropsType = {
 
 export const TaskWithRedux = memo(({todoListId, task}: TaskWithReduxPropsType) => {
 
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
-    const removeTaskHandler = () => dispatch(removeTaskAC(todoListId, task.id));
-
-    const changeIsDoneHandler = (isDone: boolean) => dispatch(changeTaskStatusAC(todoListId, task.id, isDone));
-
-    const updateTaskHandler = (newTitle: string) => dispatch(updateTaskAC(todoListId, task.id, newTitle));
+    const removeTaskHandler = () => dispatch(removeTaskTC(todoListId, task.id));
+    const changeStatusHandler = (isDone: boolean) => {
+        const status = isDone ? TaskStatuses.Completed : TaskStatuses.New
+        dispatch(updateTaskTC(todoListId, task.id, {status}));
+    }
+    const updateTaskHandler = (newTitle: string) => {
+        dispatch(updateTaskTC(todoListId, task.id, {title: newTitle}));
+    }
 
     return (
-        <li className={task.isDone ? s.isDone : ''}>
+        <li className={task.status === TaskStatuses.Completed ? s.completed : ''}>
             <UniversalButton variant={'contained'}
                              callBack={() => {
                                  removeTaskHandler()
                              }} nickName={'X'}/>
 
-            <CheckBox isDone={task.isDone}
-                      callBack={(isDone) => changeIsDoneHandler(isDone)}/>
+            <CheckBox isDone={task.status === TaskStatuses.Completed}
+                      callBack={changeStatusHandler}/>
             <EditableSpan title={task.title}
                           callBack={(newTitle) => updateTaskHandler(newTitle)}/>
         </li>

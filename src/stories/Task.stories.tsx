@@ -3,6 +3,7 @@ import { ComponentStory, ComponentMeta } from '@storybook/react';
 
 import {action} from "@storybook/addon-actions";
 import {Task} from "../components/Task";
+import {TaskPriorities, TaskStatuses} from "../api/todoListAPI";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export
 export default {
@@ -39,8 +40,10 @@ export default {
 // };
 
 const Template: ComponentStory<typeof Task> = (args) => {
-  const [task, setTask] = useState({id: 'aaa', isDone: false, title: 'JS'})
-  const changeTaskStatus = () => setTask({...task, isDone: !task.isDone})
+  const [task, setTask] = useState({id: 'aaa', status: TaskStatuses.New, title: 'JS',
+    description: '', completed: false, priority: TaskPriorities.Low, startDate: '',
+    deadline: '', order: 0, addedDate: '', todoListId: ''})
+  const changeTaskStatus = () => setTask({...task, status: TaskStatuses.Completed})
   return <Task {...args} changeTaskStatus={changeTaskStatus} task={task}/>;
 };
 

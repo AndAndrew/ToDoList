@@ -1,9 +1,9 @@
-import {combineReducers, legacy_createStore} from "redux";
+import {applyMiddleware, combineReducers, legacy_createStore} from "redux";
 import {v1} from "uuid";
+import thunk from "redux-thunk";
 import {tasksReducer} from "../reducers/tasksReducer";
 import {todoListsReducer} from "../reducers/todoListReducer";
 import {Provider} from "react-redux";
-import {AppRootStateType, store} from "./store";
 import React from "react";
 import {jsx} from "@emotion/react";
 import JSX = jsx.JSX;
@@ -21,17 +21,17 @@ const initialGlobalState = {
     ],
     tasks: {
         ['todolistId1']: [
-            {id: v1(), title: 'HTML&CSS', isDone: true},
-            {id: v1(), title: 'JS', isDone: true}
+            {id: v1(), title: 'HTML&CSS', completed: true},
+            {id: v1(), title: 'JS', completed: true}
         ],
         ['todolistId2']: [
-            {id: v1(), title: 'Milk', isDone: true},
-            {id: v1(), title: 'React Book', isDone: true}
+            {id: v1(), title: 'Milk', completed: true},
+            {id: v1(), title: 'React Book', completed: true}
         ]
     }
 }
 
-export const storyBookStore = legacy_createStore(rootReducer, initialGlobalState as AppRootStateType);
+export const storyBookStore = legacy_createStore(rootReducer, applyMiddleware(thunk));
 
 export const ReduxStoreProviderDecorator = (storyFn: () => JSX.Element) => (
     <Provider store={storyBookStore}>
