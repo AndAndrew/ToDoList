@@ -17,15 +17,13 @@ export const AddItemForm = memo((props: PropsType) => {
         setTitle(event.currentTarget.value);
         setError(false);
     }
-
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (error) setError(false);
         if (event.key === 'Enter') {
-            addTaskHandler();
+            addItemHandler();
         }
     }
-
-    const addTaskHandler = () => {
+    const addItemHandler = () => {
         let newTitle = title.trim()
         if (newTitle !== '') {
             callBack(newTitle);
@@ -37,11 +35,6 @@ export const AddItemForm = memo((props: PropsType) => {
 
     return (
         <div>
-            {/*<input value={title}*/}
-            {/*       onChange={onChangeHandler}*/}
-            {/*       onKeyDown={onKeyDownHandler}*/}
-            {/*       className={error ? s.error : ''}*/}
-            {/*/>*/}
             <TextField
                 value={title}
                 onChange={onChangeHandler}
@@ -50,8 +43,8 @@ export const AddItemForm = memo((props: PropsType) => {
                 size='small'
                 id="outlined-basic"
                 label={error ? "Title is required" : "Add title"}
-                variant="outlined" />
-            <UniversalButton variant={'contained'} callBack={addTaskHandler} nickName={'+'}/>
+                variant="outlined"/>
+            <UniversalButton variant={'contained'} callBack={addItemHandler} nickName={'+'}/>
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     )

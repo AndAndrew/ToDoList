@@ -13,18 +13,15 @@ export const EditableSpan = memo((props: PropsType) => {
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         setNewTitle(event.currentTarget.value);
     }
-
     const addTitle = () => {
         if (newTitle.trim() !== '') {
             callBack(newTitle);
         }
     }
-
     const toggleHandler = () => {
         setEdit(!edit)
         addTitle()
     }
-
     const onKeyDownHandler = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             toggleHandler()

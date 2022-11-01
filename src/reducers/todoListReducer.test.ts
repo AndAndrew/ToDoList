@@ -1,4 +1,4 @@
-import {FilterValuesType, TodoListType} from "../App";
+import {FilterValuesType, TodoListType} from "../unusingElements/App";
 import {addTodoListAC, changeFilterAC, removeTodoListAC, todoListsReducer, updateTodoListAC} from "./todoListReducer";
 import {v1} from "uuid";
 

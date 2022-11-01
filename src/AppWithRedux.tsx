@@ -1,19 +1,15 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {TodoList} from "./TodoList";
+import {TodoList} from "./components/TodoList";
 import {AddItemForm} from "./components/AddItemForm";
 import ButtonAppBar from "./components/ButtonAppBar";
 import {Container, Grid, Paper} from "@mui/material";
 import {
-    removeTaskAC, updateTaskAC, updateTaskTC
-} from "./reducers/tasksReducer";
-import {
     addTodoListTC,
     changeFilterAC, fetchTodoListsTC, FilterValuesType,
-    removeTodoListAC, TodoListDomainType
+    TodoListDomainType
 } from "./reducers/todoListReducer";
 import {useAppDispatch, useAppSelector} from "./app/hooks";
-import {TaskStatuses} from "./api/todoListAPI";
 
 function AppWithRedux() {
 
@@ -22,26 +18,8 @@ function AppWithRedux() {
 
     let dispatch = useAppDispatch();
 
-    const removeTodoList = (todoListId: string) => {
-        dispatch(removeTodoListAC(todoListId));
-    }
-    // const addTask = (newTitle: string, todoListId: string) => {
-    //     dispatch(addTaskAC(todoListId, newTitle));
-    // }
     const addTodoList = useCallback((newTitle: string) => {
         dispatch(addTodoListTC(newTitle));
-    }, [dispatch])
-    const updateTask = useCallback((todoListId: string, taskID: string, newTitle: string) => {
-        dispatch(updateTaskAC(todoListId, taskID, newTitle));
-    }, [dispatch])
-    // const updateTodoList = useCallback((todoListId: string, newTitle: string) => {
-    //     dispatch(updateTodoListTitleTC(todoListId, newTitle));
-    // }, [dispatch])
-    const removeTask = (taskID: string, todoListId: string) => {
-        dispatch(removeTaskAC(todoListId, taskID));
-    }
-    const changeTaskStatus = useCallback((todoListId: string, taskId: string, status: TaskStatuses) => {
-        dispatch(updateTaskTC(todoListId, taskId, {status}));
     }, [dispatch])
     const changeFilter = (todoListID: string, filterValue: FilterValuesType) => {
         dispatch(changeFilterAC(todoListID, filterValue));
@@ -49,7 +27,7 @@ function AppWithRedux() {
 
     useEffect(() => {
         dispatch(fetchTodoListsTC())
-    }, [])
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -68,11 +46,7 @@ function AppWithRedux() {
                                         id={el.id}
                                         tasks={tasks[el.id]}
                                         changeFilter={changeFilter}
-                                        removeTask={removeTask}
-                                        // changeTaskStatus={changeTaskStatus}
                                         filter={el.filter}
-                                        updateTask={updateTask}
-                                        // updateTodoList={updateTodoList}
                                     />
                                 </Paper>
                             </Grid>

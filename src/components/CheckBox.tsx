@@ -13,7 +13,6 @@ export const CheckBox = (props: PropsType) => {
     }
 
     return (
-        // <input type="checkbox" onChange={onChangeHandler} checked={props.isDone}/>
         <Checkbox size="small" onChange={onChangeHandler} checked={props.isDone}/>
     );
 }
