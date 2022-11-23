@@ -4,7 +4,8 @@ import {UniversalButton} from "./UniversalButton";
 import {TextField} from "@mui/material";
 
 type PropsType = {
-    callBack: (newTitle: string) => void
+    callBack: (newTitle: string) => void,
+    disabled?: boolean
 }
 
 export const AddItemForm = memo((props: PropsType) => {
@@ -43,8 +44,9 @@ export const AddItemForm = memo((props: PropsType) => {
                 size='small'
                 id="outlined-basic"
                 label={error ? "Title is required" : "Add title"}
-                variant="outlined"/>
-            <UniversalButton variant={'contained'} callBack={addItemHandler} nickName={'+'}/>
+                variant="outlined"
+                disabled={props.disabled}/>
+            <UniversalButton variant={'contained'} callBack={addItemHandler} nickName={'+'} disabled={props.disabled}/>
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     )

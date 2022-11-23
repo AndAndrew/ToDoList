@@ -10,11 +10,13 @@ import {FilterValuesType, removeTodoListTC, updateTodoListTitleTC} from "../redu
 import {TaskWithRedux} from "./TaskWithRedux";
 import {useAppDispatch, useAppSelector} from "../app/hooks";
 import {TaskStatuses, TaskType} from "../api/todoListAPI";
+import {RequestStatusType} from "../app/appReducer";
 
 type PropsType = {
     id: string,
     tasks: Array<TaskType>,
-    changeFilter: (todoListID: string, filterValue: FilterValuesType) => void
+    entityStatus: RequestStatusType,
+    changeFilter: (todoListID: string, filterValue: FilterValuesType) => void,
     filter: FilterValuesType
 }
 
@@ -55,12 +57,13 @@ export const TodoList = memo((props: PropsType) => {
         <div>
             <h3>
                 <EditableSpan title={todo ? todo.title : ''}
-                              callBack={(newTitle) => updateTodoListHandler(newTitle)}/>
-                <IconButton aria-label="delete" onClick={removeTodoList}>
+                              callBack={(newTitle) => updateTodoListHandler(newTitle)}
+                              disabled={props.entityStatus === 'loading'}/>
+                <IconButton aria-label="delete" onClick={removeTodoList} disabled={props.entityStatus === 'loading'}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm callBack={addTaskHandler}/>
+            <AddItemForm callBack={addTaskHandler} disabled={props.entityStatus === 'loading'}/>
             <ul>
                 {
                     tasksForTodolist.map((t) => {

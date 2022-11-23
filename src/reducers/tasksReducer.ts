@@ -1,6 +1,19 @@
-import {addTodoListACType, removeTodoListACType, SetTodoListsACType} from "./todoListReducer";
-import {TaskType, tasksAPI, TaskStatuses, UpdateTaskModelType, TaskPriorities} from "../api/todoListAPI";
+import {
+    addTodoListAC, changeTodoListEntityStatusAC,
+    removeTodoListAC,
+    setTodoListsAC,
+} from "./todoListReducer";
+import {
+    TaskType,
+    tasksAPI,
+    TaskStatuses,
+    UpdateTaskModelType,
+    TaskPriorities,
+    ResultCode
+} from "../api/todoListAPI";
 import {AppRootStateType, AppThunk} from "../state/store";
+import {SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
+import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
 
 let initialState: TasksStateType = {}
 
@@ -54,40 +67,33 @@ export const tasksReducer = (state: TasksStateType = initialState, action: TaskA
     }
 }
 
-export type TaskActionsType = removeTaskACType | addTaskACType
-    | updateTaskACType | changeTaskStatusACType
-    | addTodoListACType | removeTodoListACType | SetTodoListsACType
-    | SetTasksActionType
+export type TaskActionsType =
+    | ReturnType<typeof removeTaskAC> | ReturnType<typeof addTaskAC>
+    | ReturnType<typeof updateTaskAC> | ReturnType<typeof changeTaskAC>
+    | ReturnType<typeof addTodoListAC> | ReturnType<typeof removeTodoListAC>
+    | ReturnType<typeof setTodoListsAC> | ReturnType<typeof setTasksAC>
+    | SetAppStatusType | SetAppErrorType
 
-type removeTaskACType = ReturnType<typeof removeTaskAC>
-export const removeTaskAC = (todoListId: string, taskID: string) => {
-    return {
-        type: "REMOVE-TASK",
-        payload: {todoListId, taskID}
-    } as const
-}
-type addTaskACType = ReturnType<typeof addTaskAC>
-export const addTaskAC = (todoListId: string, task: TaskType) => {
-    return {
-        type: "ADD-TASK",
-        payload: {todoListId, task}
-    } as const
-}
-type updateTaskACType = ReturnType<typeof updateTaskAC>
+export const removeTaskAC = (todoListId: string, taskID: string) => ({
+    type: "REMOVE-TASK",
+    payload: {todoListId, taskID}
+}) as const
+export const addTaskAC = (todoListId: string, task: TaskType) => ({
+    type: "ADD-TASK",
+    payload: {todoListId, task}
+}) as const
 export const updateTaskAC = (todoListId: string, taskID: string, newTitle: string) => {
     return {
         type: "UPDATE-TASK",
         payload: {todoListId, taskID, newTitle}
     } as const
 }
-type changeTaskStatusACType = ReturnType<typeof changeTaskAC>
 export const changeTaskAC = (todoListId: string, taskId: string, task: TaskType) => {
     return {
         type: "CHANGE-TASK",
         payload: {todoListId, taskId, task}
     } as const
 }
-type SetTasksActionType = ReturnType<typeof setTasksAC>
 export const setTasksAC = (tasks: Array<TaskType>, todoListId: string) => {
     return {
         type: 'SET-TASKS',
@@ -96,17 +102,37 @@ export const setTasksAC = (tasks: Array<TaskType>, todoListId: string) => {
 }
 
 export const fetchTasksTC = (todolistId: string): AppThunk => async dispatch => {
+    dispatch(setAppStatus('loading'));
     const res = await tasksAPI.getTasks(todolistId);
     const tasks = res.data.items;
-    dispatch(setTasksAC(tasks, todolistId))
+    dispatch(setTasksAC(tasks, todolistId));
+    dispatch(setAppStatus('succeeded'));
 }
 export const removeTaskTC = (todoListId: string, taskId: string): AppThunk => async dispatch => {
-    await tasksAPI.deleteTask(todoListId, taskId);
-    dispatch(removeTaskAC(todoListId, taskId))
+    try {
+        dispatch(setAppStatus('loading'));
+        await tasksAPI.deleteTask(todoListId, taskId);
+        dispatch(removeTaskAC(todoListId, taskId));
+        dispatch(setAppStatus('succeeded'));
+    } catch (e) {
+        handleServerNetworkError(dispatch, e)
+    }
 }
 export const addTaskTC = (todoListId: string, title: string): AppThunk => async dispatch => {
-    const res = await tasksAPI.createTask(todoListId, title);
-    dispatch(addTaskAC(todoListId, res.data.data.item))
+    try {
+        dispatch(setAppStatus('loading'))
+        dispatch(changeTodoListEntityStatusAC(todoListId, 'loading'))
+        const res = await tasksAPI.createTask(todoListId, title);
+        if (res.data.resultCode === ResultCode.OK) {
+            dispatch(addTaskAC(todoListId, res.data.data.item));
+            dispatch(setAppStatus('succeeded'))
+            dispatch(changeTodoListEntityStatusAC(todoListId, 'idle'))
+        } else {
+            handleServerAppError<{ item: TaskType }>(dispatch, res.data)
+        }
+    } catch (e) {
+        handleServerNetworkError(dispatch, e)
+    }
 }
 export type UpdateTaskType = {
     title?: string,
@@ -117,13 +143,25 @@ export type UpdateTaskType = {
     deadLine?: string
 }
 export const updateTaskTC = (todoListId: string, taskId: string, value: UpdateTaskType): AppThunk => async (dispatch, getState: () => AppRootStateType) => {
-    const task = getState().tasks[todoListId].find((t: TaskType) => t.id === taskId);
-    if (task) {
-        const model: UpdateTaskModelType = {
-            ...task,
-            ...value
+    try {
+        dispatch(setAppStatus('loading'))
+        dispatch(changeTodoListEntityStatusAC(todoListId, 'loading'))
+        const task = getState().tasks[todoListId].find((t: TaskType) => t.id === taskId);
+        if (task) {
+            const model: UpdateTaskModelType = {
+                ...task,
+                ...value
+            }
+            const res = await tasksAPI.updateTask(todoListId, taskId, model);
+            if (res.data.resultCode === ResultCode.OK) {
+                dispatch(changeTaskAC(todoListId, taskId, res.data.data.item))
+                dispatch(setAppStatus('succeeded'))
+                dispatch(changeTodoListEntityStatusAC(todoListId, 'idle'))
+            } else {
+                handleServerAppError(dispatch, res.data)
+            }
         }
-        const res = await tasksAPI.updateTask(todoListId, taskId, model);
-        dispatch(changeTaskAC(todoListId, taskId, res.data.data.item))
+    } catch (e) {
+        handleServerNetworkError(dispatch, e)
     }
 }

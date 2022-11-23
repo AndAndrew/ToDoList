@@ -3,9 +3,10 @@ import {Button} from "@mui/material";
 
 type ButtonPropsType = {
     variant?: any,
-    callBack: () => void,
+    callBack: () => void
     nickName: string
     className?: string
+    disabled?: boolean
 }
 
 export const UniversalButton = (props: ButtonPropsType) => {
@@ -15,6 +16,7 @@ export const UniversalButton = (props: ButtonPropsType) => {
     return (
         <Button variant={props.variant}
                 onClick={onClickHandler}
+                disabled={props.disabled}
                 size='small'
                 style={{
                     maxWidth: '250px',

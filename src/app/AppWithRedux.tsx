@@ -1,15 +1,18 @@
 import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {TodoList} from "./components/TodoList";
-import {AddItemForm} from "./components/AddItemForm";
-import ButtonAppBar from "./components/ButtonAppBar";
-import {Container, Grid, Paper} from "@mui/material";
+import {TodoList} from "../components/TodoList";
+import {AddItemForm} from "../components/AddItemForm";
+import ButtonAppBar from "../components/ButtonAppBar";
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
+
 import {
     addTodoListTC,
     changeFilterAC, fetchTodoListsTC, FilterValuesType,
     TodoListDomainType
-} from "./reducers/todoListReducer";
-import {useAppDispatch, useAppSelector} from "./app/hooks";
+} from "../reducers/todoListReducer";
+import {useAppDispatch, useAppSelector} from "./hooks";
 
 function AppWithRedux() {
 
@@ -45,6 +48,7 @@ function AppWithRedux() {
                                         key={el.id}
                                         id={el.id}
                                         tasks={tasks[el.id]}
+                                        entityStatus={el.entityStatus}
                                         changeFilter={changeFilter}
                                         filter={el.filter}
                                     />

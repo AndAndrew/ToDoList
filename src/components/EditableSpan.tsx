@@ -3,6 +3,7 @@ import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 type PropsType = {
     title: string
     callBack: (newTitle: string) => void
+    disabled?: boolean
 }
 
 export const EditableSpan = memo((props: PropsType) => {
