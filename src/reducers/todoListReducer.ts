@@ -7,6 +7,8 @@ import {AppRootStateType, AppThunk} from "../state/store";
 import {RequestStatusType, setAppError, SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
 import axios, {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 let initialState: Array<TodoListDomainType> = [];
 
@@ -85,9 +87,13 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatusTy
 }
 
 export const fetchTodoListsTC = (): AppThunk => async dispatch => {
-    const res = await todoListAPI.getTodoList()
-    dispatch(setTodoListsAC(res.data))
-    dispatch(setAppStatus('succeeded'))
+    try {
+        const res = await todoListAPI.getTodoList()
+        dispatch(setTodoListsAC(res.data))
+        dispatch(setAppStatus('succeeded'))
+    } catch (e) {
+        handleServerNetworkError(dispatch, e)
+    }
 }
 export const removeTodoListTC = (todoListId: string): AppThunk => async dispatch => {
     try {
@@ -116,7 +122,7 @@ export const addTodoListTC = (title: string): AppThunk => async dispatch => {
         if (res.data.resultCode === ResultCode.OK) {
             dispatch(addTodoListAC(res.data.data.item))
         } else {
-            handleServerAppError<{item: TodoListType}>(dispatch, res.data)
+            handleServerAppError<{ item: TodoListType }>(dispatch, res.data)
         }
     } catch (e) {
         handleServerNetworkError(dispatch, e)

@@ -25,7 +25,6 @@ export const TodoList = memo((props: PropsType) => {
     const todo = useAppSelector(state => state.todoLists.find(todo => {
         return todo && todo.id === props.id
     }));
-
     const dispatch = useAppDispatch();
 
     const filterHandler = (filterValue: FilterValuesType) => {

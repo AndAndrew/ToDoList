@@ -17,7 +17,7 @@ export default function ButtonAppBar() {
 
     return (
         <Box sx={{flexGrow: 1}}>
-            <ErrorSnackbar />
+            <ErrorSnackbar/>
             <AppBar position="static" style={{backgroundColor: 'orange'}}>
                 <Toolbar>
                     <IconButton

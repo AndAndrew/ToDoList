@@ -13,6 +13,8 @@ import {
     TodoListDomainType
 } from "../reducers/todoListReducer";
 import {useAppDispatch, useAppSelector} from "./hooks";
+import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {Login} from "../features/Login/Login";
 
 function AppWithRedux() {
 
@@ -33,32 +35,38 @@ function AppWithRedux() {
     }, [dispatch])
 
     return (
-        <div className="App">
-            <ButtonAppBar/>
-            <Container fixed>
-                <Grid container style={{padding: '20px'}}>
-                    <AddItemForm callBack={addTodoList}/>
-                </Grid>
-                <Grid container spacing={3}>
-                    {todoLists.map((el: TodoListDomainType) => {
-                        return (
-                            <Grid item key={el.id}>
-                                <Paper style={{padding: '10px'}}>
-                                    <TodoList
-                                        key={el.id}
-                                        id={el.id}
-                                        tasks={tasks[el.id]}
-                                        entityStatus={el.entityStatus}
-                                        changeFilter={changeFilter}
-                                        filter={el.filter}
-                                    />
-                                </Paper>
-                            </Grid>
-                        )
-                    })}
-                </Grid>
-            </Container>
-        </div>
+        <BrowserRouter>
+            <div className="App">
+                <ButtonAppBar/>
+                <Container fixed>
+                    <Routes>
+                        <Route path={'/'} element={<><Grid container style={{padding: '20px'}}>
+                            <AddItemForm callBack={addTodoList}/>
+                        </Grid>
+                            <Grid container spacing={3}>
+                                {todoLists.map((el: TodoListDomainType) => {
+                                    return (
+                                        <Grid item key={el.id}>
+                                            <Paper style={{padding: '10px'}}>
+                                                <TodoList
+                                                    key={el.id}
+                                                    id={el.id}
+                                                    tasks={tasks[el.id]}
+                                                    entityStatus={el.entityStatus}
+                                                    changeFilter={changeFilter}
+                                                    filter={el.filter}
+                                                />
+                                            </Paper>
+                                        </Grid>
+                                    )
+                                })}
+                            </Grid></>
+                        }/>
+                        <Route path={'/login'} element={<Login/>}/>
+                    </Routes>
+                </Container>
+            </div>
+        </BrowserRouter>
     );
 }
 

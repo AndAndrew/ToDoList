@@ -71,6 +71,18 @@ const instance = axios.create({
     },
 })
 
+export type LoginParamsType = {
+    email: string,
+    password: string,
+    rememberMe: boolean,
+    captcha?: string
+}
+export const authAPI = {
+    login(data: LoginParamsType) {
+        const promise = instance.post<ResponseType<{userId?: number}>>('auth/login', data);
+        return promise
+    }
+}
 export const todoListAPI = {
     getTodoList() {
         const promise = instance.get<TodoListType[]>('todo-lists');
