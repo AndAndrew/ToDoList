@@ -88,6 +88,7 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatusTy
 
 export const fetchTodoListsTC = (): AppThunk => async dispatch => {
     try {
+        console.log('yoyoyo')
         const res = await todoListAPI.getTodoList()
         dispatch(setTodoListsAC(res.data))
         dispatch(setAppStatus('succeeded'))

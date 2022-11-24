@@ -6,6 +6,7 @@ export enum TaskStatuses {
     Completed = 2,
     Draft = 3
 }
+
 export enum TaskPriorities {
     Low = 0,
     Middle = 1,
@@ -13,6 +14,7 @@ export enum TaskPriorities {
     Urgently = 3,
     Later = 4
 }
+
 export enum ResultCode {
     OK = 0,
     ERROR = 1,
@@ -79,7 +81,11 @@ export type LoginParamsType = {
 }
 export const authAPI = {
     login(data: LoginParamsType) {
-        const promise = instance.post<ResponseType<{userId?: number}>>('auth/login', data);
+        const promise = instance.post<ResponseType<{ userId?: number }>>('auth/login', data);
+        return promise
+    },
+    me() {
+        const promise = instance.get<ResponseType<{ id: number, email: string, login: string }>>('auth/me');
         return promise
     }
 }

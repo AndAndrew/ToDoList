@@ -19,7 +19,7 @@ export const authReducer = (state: InitialStateType = initialState, action: Auth
 
 export type AuthActionsType = ReturnType<typeof setIsLoggedInAC>
 
-const setIsLoggedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-IN", value}) as const
+export const setIsLoggedInAC = (value: boolean) => ({type: "login/SET-IS-LOGGED-IN", value}) as const
 
 export const loginTC = (data: LoginParamsType): AppThunk => async dispatch => {
     try {

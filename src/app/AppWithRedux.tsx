@@ -13,26 +13,37 @@ import {
     TodoListDomainType
 } from "../reducers/todoListReducer";
 import {useAppDispatch, useAppSelector} from "./hooks";
-import {BrowserRouter, Route, Routes} from "react-router-dom";
+import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
 import {Login} from "../features/Login/Login";
+import {CircularProgress} from "@mui/material";
+import {initializeAppTC} from "./appReducer";
 
 function AppWithRedux() {
 
-    let todoLists = useAppSelector(state => state.todoLists);
-    let tasks = useAppSelector(state => state.tasks);
+    const dispatch = useAppDispatch();
 
-    let dispatch = useAppDispatch();
+    useEffect(() => {
+        dispatch(initializeAppTC())
+        dispatch(fetchTodoListsTC())
+    }, [dispatch])
 
     const addTodoList = useCallback((newTitle: string) => {
         dispatch(addTodoListTC(newTitle));
     }, [dispatch])
+
+    let todoLists = useAppSelector(state => state.todoLists);
+    let tasks = useAppSelector(state => state.tasks);
+    const isInitialised = useAppSelector(state => state.app.isInitialized)
+    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+
+    if (!isInitialised) {
+        return <div style={{position: 'fixed', top: '30%', textAlign: 'center', width: '100%'}}>
+            <CircularProgress/>
+        </div>
+    }
     const changeFilter = (todoListID: string, filterValue: FilterValuesType) => {
         dispatch(changeFilterAC(todoListID, filterValue));
     }
-
-    useEffect(() => {
-        dispatch(fetchTodoListsTC())
-    }, [dispatch])
 
     return (
         <BrowserRouter>
@@ -40,28 +51,29 @@ function AppWithRedux() {
                 <ButtonAppBar/>
                 <Container fixed>
                     <Routes>
-                        <Route path={'/'} element={<><Grid container style={{padding: '20px'}}>
-                            <AddItemForm callBack={addTodoList}/>
-                        </Grid>
-                            <Grid container spacing={3}>
-                                {todoLists.map((el: TodoListDomainType) => {
-                                    return (
-                                        <Grid item key={el.id}>
-                                            <Paper style={{padding: '10px'}}>
-                                                <TodoList
-                                                    key={el.id}
-                                                    id={el.id}
-                                                    tasks={tasks[el.id]}
-                                                    entityStatus={el.entityStatus}
-                                                    changeFilter={changeFilter}
-                                                    filter={el.filter}
-                                                />
-                                            </Paper>
-                                        </Grid>
-                                    )
-                                })}
-                            </Grid></>
-                        }/>
+                        <Route path={'/'} element={
+                            isLoggedIn ? <><Grid container style={{padding: '20px'}}>
+                                    <AddItemForm callBack={addTodoList}/>
+                                </Grid>
+                                    <Grid container spacing={3}>
+                                        {todoLists.map((el: TodoListDomainType) => {
+                                            return (
+                                                <Grid item key={el.id}>
+                                                    <Paper style={{padding: '10px'}}>
+                                                        <TodoList
+                                                            key={el.id}
+                                                            id={el.id}
+                                                            tasks={tasks[el.id]}
+                                                            entityStatus={el.entityStatus}
+                                                            changeFilter={changeFilter}
+                                                            filter={el.filter}
+                                                        />
+                                                    </Paper>
+                                                </Grid>
+                                            )
+                                        })}
+                                    </Grid></>
+                                : <Navigate to={'/login'}/>}/>
                         <Route path={'/login'} element={<Login/>}/>
                     </Routes>
                 </Container>
