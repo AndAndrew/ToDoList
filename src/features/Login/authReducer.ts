@@ -36,3 +36,18 @@ export const loginTC = (data: LoginParamsType): AppThunk => async dispatch => {
     }
     dispatch(setAppStatus('succeeded'));
 }
+export const logoutTC = (): AppThunk => async dispatch => {
+    try {
+        dispatch(setAppStatus('loading'))
+        const res = await authAPI.logout()
+        if (res.data.resultCode === 0) {
+            dispatch(setIsLoggedInAC(false))
+            dispatch(setAppStatus('succeeded'))
+        } else {
+            handleServerAppError(dispatch, res.data)
+        }
+    } catch
+        (error) {
+        handleServerNetworkError(dispatch, error)
+    }
+}
