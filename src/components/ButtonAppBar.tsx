@@ -22,7 +22,7 @@ export default function ButtonAppBar() {
 
     const logOutHandler = useCallback(() => {
         dispatch(logoutTC())
-    }, [])
+    }, [dispatch])
 
     return (
         <Box sx={{flexGrow: 1}}>
