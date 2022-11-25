@@ -7,8 +7,6 @@ import {AppRootStateType, AppThunk} from "../state/store";
 import {RequestStatusType, setAppError, SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
 import axios, {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
-import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
 
 let initialState: Array<TodoListDomainType> = [];
 
@@ -88,7 +86,6 @@ export const changeTodoListEntityStatusAC = (id: string, status: RequestStatusTy
 
 export const fetchTodoListsTC = (): AppThunk => async dispatch => {
     try {
-        console.log('yoyoyo')
         const res = await todoListAPI.getTodoList()
         dispatch(setTodoListsAC(res.data))
         dispatch(setAppStatus('succeeded'))
