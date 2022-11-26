@@ -3,6 +3,8 @@ import {Button} from "@mui/material";
 
 type ButtonPropsType = {
     variant?: any,
+    backgroundColor?: string,
+    color?: string,
     callBack: () => void
     nickName: string
     className?: string
@@ -20,10 +22,11 @@ export const UniversalButton = (props: ButtonPropsType) => {
                 size='small'
                 style={{
                     maxWidth: '250px',
-                    maxHeight: '38px',
                     minWidth: '38px',
                     minHeight: '38px',
-                    backgroundColor: 'coral'
+                    backgroundColor: props.backgroundColor,
+                    color: props.color,
+                    borderColor: 'coral'
                 }}>{props.nickName}</Button>
     );
 }

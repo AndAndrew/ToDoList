@@ -37,6 +37,7 @@ export const initializeAppTC = (): AppThunk => async dispatch => {
 
     }
     dispatch(setAppInitialized(true))
+    dispatch(setAppStatus('idle'))
 }
 
 export type SetAppStatusType = ReturnType<typeof setAppStatus>

@@ -36,7 +36,7 @@ export const TodoListsList = () => {
 
     return <div>
         <Grid container style={{padding: '20px'}}>
-            <AddItemForm callBack={addTodoList}/>
+            <AddItemForm label={'Add new list'} callBack={addTodoList}/>
         </Grid>
         <Grid container spacing={3}>
             {todoLists.map((el: TodoListDomainType) => {

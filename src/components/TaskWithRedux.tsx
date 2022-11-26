@@ -1,18 +1,21 @@
 import React, {memo} from 'react';
 import s from "../TodoList.module.css";
-import {UniversalButton} from "./UniversalButton";
 import {CheckBox} from "./CheckBox";
 import {EditableSpan} from "./EditableSpan";
 import {removeTaskTC, updateTaskTC} from "../reducers/tasksReducer";
 import {useAppDispatch} from "../app/hooks";
 import {TaskStatuses, TaskType} from "../api/todoListAPI";
+import {Delete} from "@material-ui/icons";
+import {IconButton} from "@mui/material";
+import {RequestStatusType} from "../app/appReducer";
 
 export type TaskWithReduxPropsType = {
     todoListId: string,
-    task: TaskType
+    task: TaskType,
+    entityStatus: RequestStatusType
 }
 
-export const TaskWithRedux = memo(({todoListId, task}: TaskWithReduxPropsType) => {
+export const TaskWithRedux = memo(({todoListId, task, entityStatus}: TaskWithReduxPropsType) => {
 
     const dispatch = useAppDispatch();
 
@@ -27,15 +30,15 @@ export const TaskWithRedux = memo(({todoListId, task}: TaskWithReduxPropsType) =
 
     return (
         <li className={task.status === TaskStatuses.Completed ? s.completed : ''}>
-            <UniversalButton variant={'contained'}
-                             callBack={() => {
-                                 removeTaskHandler()
-                             }} nickName={'X'}/>
-
             <CheckBox isDone={task.status === TaskStatuses.Completed}
                       callBack={changeStatusHandler}/>
             <EditableSpan title={task.title}
                           callBack={(newTitle) => updateTaskHandler(newTitle)}/>
+            <IconButton aria-label="delete"
+                        onClick={removeTaskHandler}
+                        disabled={entityStatus === 'loading'}>
+                <Delete/>
+            </IconButton>
         </li>
     )
 });

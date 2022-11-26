@@ -4,6 +4,7 @@ import {UniversalButton} from "./UniversalButton";
 import {TextField} from "@mui/material";
 
 type PropsType = {
+    label: string,
     callBack: (newTitle: string) => void,
     disabled?: boolean
 }
@@ -35,7 +36,7 @@ export const AddItemForm = memo((props: PropsType) => {
     }
 
     return (
-        <div>
+        <div style={{display: 'flex', flexDirection: 'row'}}>
             <TextField
                 value={title}
                 onChange={onChangeHandler}
@@ -43,10 +44,26 @@ export const AddItemForm = memo((props: PropsType) => {
                 error={error}
                 size='small'
                 id="outlined-basic"
-                label={error ? "Title is required" : "Add title"}
+                label={error ? "Title is required" : props.label}
                 variant="outlined"
+                sx={{
+                    // "& .MuiInputLabel-root": {color: 'coral'},
+                    "& .MuiOutlinedInput-root": {
+                        "& > fieldset": {borderColor: "coral"},
+                    },
+                    "& .MuiInputLabel-root.Mui-focused": {color: 'coral'},
+                    "& .MuiOutlinedInput-root.Mui-focused": {
+                        "& > fieldset": {
+                            borderColor: "coral"
+                        }
+                    }
+                }}
                 disabled={props.disabled}/>
-            <UniversalButton variant={'contained'} callBack={addItemHandler} nickName={'+'} disabled={props.disabled}/>
+            <UniversalButton variant={'outlined'}
+                             callBack={addItemHandler}
+                             nickName={'+'}
+                             disabled={props.disabled}
+                             color={'coral'}/>
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>
     )

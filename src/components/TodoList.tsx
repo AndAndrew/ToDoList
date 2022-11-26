@@ -1,6 +1,5 @@
 import React, {memo, useCallback, useEffect} from "react";
 import {UniversalButton} from "./UniversalButton";
-import s from '../TodoList.module.css';
 import {AddItemForm} from "./AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {IconButton} from "@mui/material";
@@ -21,22 +20,26 @@ type PropsType = {
 }
 
 export const TodoList = memo((props: PropsType) => {
+    const dispatch = useAppDispatch();
 
+    useEffect(() => {
+        dispatch(fetchTasksTC(props.id))
+    }, [props.id, dispatch])
     const todo = useAppSelector(state => state.todoLists.find(todo => {
         return todo && todo.id === props.id
     }));
-    const dispatch = useAppDispatch();
 
     const filterHandler = (filterValue: FilterValuesType) => {
         props.changeFilter(props.id, filterValue);
     }
-    const updateTodoListHandler = (newTitle: string) => {
+
+    const updateTodoListHandler = useCallback((newTitle: string) => {
         dispatch(updateTodoListTitleTC(props.id, newTitle));
-    };
+    }, [dispatch, props.id]);
     const addTaskHandler = useCallback((newTitle: string) => {
         dispatch(addTaskTC(todo ? todo.id : '', newTitle));
     }, [todo, dispatch]);
-    const removeTodoList = () => dispatch(removeTodoListTC(props.id));
+    const removeTodoList = useCallback(() => dispatch(removeTodoListTC(props.id)), [dispatch, props.id]);
 
     const allTodoListTasks = props.tasks;
     let tasksForTodolist = allTodoListTasks;
@@ -48,21 +51,19 @@ export const TodoList = memo((props: PropsType) => {
         tasksForTodolist = allTodoListTasks.filter(t => t.status === TaskStatuses.Completed);
     }
 
-    useEffect(() => {
-        dispatch(fetchTasksTC(props.id))
-    }, [props.id, dispatch])
-
     return (
         <div>
             <h3>
                 <EditableSpan title={todo ? todo.title : ''}
                               callBack={(newTitle) => updateTodoListHandler(newTitle)}
                               disabled={props.entityStatus === 'loading'}/>
-                <IconButton aria-label="delete" onClick={removeTodoList} disabled={props.entityStatus === 'loading'}>
+                <IconButton aria-label="delete"
+                            onClick={removeTodoList}
+                            disabled={props.entityStatus === 'loading'}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm callBack={addTaskHandler} disabled={props.entityStatus === 'loading'}/>
+            <AddItemForm label={'Add new task'} callBack={addTaskHandler} disabled={props.entityStatus === 'loading'}/>
             <ul>
                 {
                     tasksForTodolist.map((t) => {
@@ -71,25 +72,29 @@ export const TodoList = memo((props: PropsType) => {
                                 key={t.id}
                                 todoListId={props.id}
                                 task={t}
+                                entityStatus={props.entityStatus}
                             />
                         )
                     })}
             </ul>
             <div>
-                <UniversalButton variant={'contained'} className={props.filter === 'All' ? s.activeFilter : ''}
+                <UniversalButton variant={props.filter === 'All' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('All')
                                  }}
+                                 color={'coral'}
                                  nickName={'all'}/>
-                <UniversalButton variant={'contained'} className={props.filter === 'Active' ? s.activeFilter : ''}
+                <UniversalButton variant={props.filter === 'Active' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('Active')
                                  }}
+                                 color={'coral'}
                                  nickName={'active'}/>
-                <UniversalButton variant={'contained'} className={props.filter === 'Completed' ? s.activeFilter : ''}
+                <UniversalButton variant={props.filter === 'Completed' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('Completed')
                                  }}
+                                 color={'coral'}
                                  nickName={'completed'}/>
             </div>
         </div>
