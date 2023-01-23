@@ -1,5 +1,5 @@
 import {AppThunk} from "../../state/store";
-import {setAppStatus} from "../../app/appReducer";
+import {setAppError, setAppStatus} from "../../app/appReducer";
 import {authAPI, LoginParamsType} from "../../api/todoListAPI";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
