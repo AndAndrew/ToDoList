@@ -2,6 +2,7 @@ import {AppThunk} from "../../state/store";
 import {setAppStatus} from "../../app/appReducer";
 import {authAPI, LoginParamsType} from "../../api/authAPI";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
+import {ResultCode} from "../../api/instance";
 
 const initialState = {
     isLoggedIn: false,
@@ -26,7 +27,7 @@ export const loginTC = (data: LoginParamsType): AppThunk => async dispatch => {
     try {
         dispatch(setAppStatus('loading'));
         const res = await authAPI.login(data);
-        if (res.data.resultCode === 0) {
+        if (res.data.resultCode === ResultCode.OK) {
             dispatch(setIsLoggedInAC(true))
         } else {
             handleServerAppError(dispatch, res.data)
@@ -41,7 +42,7 @@ export const logoutTC = (): AppThunk => async dispatch => {
     try {
         dispatch(setAppStatus('loading'))
         const res = await authAPI.logout()
-        if (res.data.resultCode === 0) {
+        if (res.data.resultCode === ResultCode.OK) {
             dispatch(setIsLoggedInAC(false))
         } else {
             handleServerAppError(dispatch, res.data)
