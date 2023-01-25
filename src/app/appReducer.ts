@@ -34,7 +34,6 @@ export const initializeAppTC = (): AppThunk => async dispatch => {
     if (res.data.resultCode === 0) {
         dispatch(setIsLoggedInAC(true))
     } else {
-
     }
     dispatch(setAppInitialized(true))
     dispatch(setAppStatus('idle'))
