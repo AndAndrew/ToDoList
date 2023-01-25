@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 
 import {action} from "@storybook/addon-actions";
-import {TaskPriorities, TaskStatuses} from "../api/todoListAPI";
+import {TaskPriorities, TaskStatuses} from "../api/tasksAPI";
 import {TaskWithRedux} from "../components/TaskWithRedux";
 
 // More on default export: https://storybook.js.org/docs/react/writing-stories/introduction#default-export

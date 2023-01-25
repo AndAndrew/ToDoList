@@ -4,7 +4,7 @@ import {CheckBox} from "./CheckBox";
 import {EditableSpan} from "./EditableSpan";
 import {removeTaskTC, updateTaskTC} from "../reducers/tasksReducer";
 import {useAppDispatch} from "../app/hooks";
-import {TaskStatuses, TaskType} from "../api/todoListAPI";
+import {TaskStatuses, TaskType} from "../api/tasksAPI";
 import {Delete} from "@material-ui/icons";
 import {IconButton} from "@mui/material";
 import {RequestStatusType} from "../app/appReducer";
@@ -12,7 +12,7 @@ import {RequestStatusType} from "../app/appReducer";
 export type TaskWithReduxPropsType = {
     todoListId: string,
     task: TaskType,
-    entityStatus: RequestStatusType
+    entityStatus: RequestStatusType,
 }
 
 export const TaskWithRedux = memo(({todoListId, task, entityStatus}: TaskWithReduxPropsType) => {

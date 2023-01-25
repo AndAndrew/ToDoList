@@ -1,19 +1,20 @@
 import {
     TodoListType,
     todoListAPI,
-    UpdateTodoListModelType, ResultCode
+    UpdateTodoListModelType
 } from "../api/todoListAPI";
 import {AppRootStateType, AppThunk} from "../state/store";
 import {RequestStatusType, setAppError, SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
 import axios, {AxiosError} from "axios";
 import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
+import {ResultCode} from "../api/instance";
 
 let initialState: Array<TodoListDomainType> = [];
 
 export type FilterValuesType = 'All' | 'Active' | 'Completed'
 export type TodoListDomainType = TodoListType & {
     filter: FilterValuesType,
-    entityStatus: RequestStatusType
+    entityStatus: RequestStatusType,
 }
 
 export const todoListsReducer = (state: Array<TodoListDomainType> = initialState, action: TodoListActionsType): Array<TodoListDomainType> => {

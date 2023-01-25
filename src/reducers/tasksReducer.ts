@@ -8,12 +8,12 @@ import {
     tasksAPI,
     TaskStatuses,
     UpdateTaskModelType,
-    TaskPriorities,
-    ResultCode
-} from "../api/todoListAPI";
+    TaskPriorities
+} from "../api/tasksAPI";
 import {AppRootStateType, AppThunk} from "../state/store";
 import {SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
 import {handleServerAppError, handleServerNetworkError} from "../utils/errorUtils";
+import {ResultCode} from "../api/instance";
 
 let initialState: TasksStateType = {}
 

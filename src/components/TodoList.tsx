@@ -8,15 +8,15 @@ import {addTaskTC, fetchTasksTC} from "../reducers/tasksReducer";
 import {FilterValuesType, removeTodoListTC, updateTodoListTitleTC} from "../reducers/todoListReducer";
 import {TaskWithRedux} from "./TaskWithRedux";
 import {useAppDispatch, useAppSelector} from "../app/hooks";
-import {TaskStatuses, TaskType} from "../api/todoListAPI";
 import {RequestStatusType} from "../app/appReducer";
+import {TaskStatuses, TaskType} from "../api/tasksAPI";
 
 type PropsType = {
     id: string,
     tasks: Array<TaskType>,
     entityStatus: RequestStatusType,
     changeFilter: (todoListID: string, filterValue: FilterValuesType) => void,
-    filter: FilterValuesType
+    filter: FilterValuesType,
 }
 
 export const TodoList = memo((props: PropsType) => {

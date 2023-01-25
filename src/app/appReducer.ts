@@ -1,5 +1,5 @@
 import {AppThunk} from "../state/store";
-import {authAPI} from "../api/todoListAPI";
+import {authAPI} from "../api/authAPI";
 import {setIsLoggedInAC} from "../features/Login/authReducer";
 
 export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
@@ -7,7 +7,7 @@ export type RequestStatusType = 'idle' | 'loading' | 'succeeded' | 'failed'
 const initialState = {
     status: 'loading' as RequestStatusType,
     error: null as null | string,
-    isInitialized: false as boolean
+    isInitialized: false as boolean,
 }
 
 type InitialStateType = typeof initialState

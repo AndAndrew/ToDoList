@@ -1,6 +1,6 @@
 import {setAppError, SetAppErrorType, setAppStatus, SetAppStatusType} from "../app/appReducer";
 import {Dispatch} from "redux";
-import {ResponseType} from "../api/todoListAPI";
+import {ResponseType} from "../api/instance";
 import axios, {AxiosError} from "axios";
 
 export const handleServerAppError = <T>(dispatch: Dispatch<ErrorUtilsDispatchType>, data: ResponseType<T>) => {
