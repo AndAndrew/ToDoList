@@ -6,6 +6,7 @@ import {handleServerAppError, handleServerNetworkError} from "../../utils/errorU
 const initialState = {
     isLoggedIn: false,
 }
+
 type InitialStateType = typeof initialState
 
 export const authReducer = (state: InitialStateType = initialState, action: AuthActionsType): InitialStateType => {
@@ -27,14 +28,14 @@ export const loginTC = (data: LoginParamsType): AppThunk => async dispatch => {
         const res = await authAPI.login(data);
         if (res.data.resultCode === 0) {
             dispatch(setIsLoggedInAC(true))
-            dispatch(setAppStatus('succeeded'))
         } else {
             handleServerAppError(dispatch, res.data)
         }
     } catch (error) {
         handleServerNetworkError(dispatch, error)
+    } finally {
+        dispatch(setAppStatus('idle'))
     }
-    dispatch(setAppStatus('succeeded'));
 }
 export const logoutTC = (): AppThunk => async dispatch => {
     try {
@@ -42,12 +43,13 @@ export const logoutTC = (): AppThunk => async dispatch => {
         const res = await authAPI.logout()
         if (res.data.resultCode === 0) {
             dispatch(setIsLoggedInAC(false))
-            dispatch(setAppStatus('succeeded'))
         } else {
             handleServerAppError(dispatch, res.data)
         }
     } catch
         (error) {
         handleServerNetworkError(dispatch, error)
+    } finally {
+        dispatch(setAppStatus('idle'))
     }
 }
