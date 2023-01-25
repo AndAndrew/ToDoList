@@ -1,17 +1,17 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
-import s from "../TodoList.module.css";
-import {UniversalButton} from "./UniversalButton";
+import s from "../../TodoList.module.css";
+import {UniversalButton} from "../button/UniversalButton";
 import {TextField} from "@mui/material";
+import {textFieldStyle} from "./addItemFormMuiStyles";
 
 type PropsType = {
     label: string,
     callBack: (newTitle: string) => void,
-    disabled?: boolean
+    disabled?: boolean,
 }
 
-export const AddItemForm = memo((props: PropsType) => {
+export const AddItemForm = memo(({label, callBack, disabled}: PropsType) => {
 
-    const {callBack} = props
     const [title, setTitle] = useState('');
     const [error, setError] = useState(false);
 
@@ -44,25 +44,14 @@ export const AddItemForm = memo((props: PropsType) => {
                 error={error}
                 size='small'
                 id="outlined-basic"
-                label={error ? "Title is required" : props.label}
+                label={error ? "Title is required" : label}
                 variant="outlined"
-                sx={{
-                    // "& .MuiInputLabel-root": {color: 'coral'},
-                    "& .MuiOutlinedInput-root": {
-                        "& > fieldset": {borderColor: "coral"},
-                    },
-                    "& .MuiInputLabel-root.Mui-focused": {color: 'coral'},
-                    "& .MuiOutlinedInput-root.Mui-focused": {
-                        "& > fieldset": {
-                            borderColor: "coral"
-                        }
-                    }
-                }}
-                disabled={props.disabled}/>
+                sx={textFieldStyle}
+                disabled={disabled}/>
             <UniversalButton variant={'outlined'}
                              callBack={addItemHandler}
                              nickName={'+'}
-                             disabled={props.disabled}
+                             disabled={disabled}
                              color={'coral'}/>
             {error && <div className={s.errorMessage}>{error}</div>}
         </div>

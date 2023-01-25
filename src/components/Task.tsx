@@ -9,21 +9,23 @@ import {Delete} from "@material-ui/icons";
 import {IconButton} from "@mui/material";
 import {RequestStatusType} from "../app/appReducer";
 
-export type TaskWithReduxPropsType = {
+type TaskPropsType = {
     todoListId: string,
     task: TaskType,
     entityStatus: RequestStatusType,
 }
 
-export const TaskWithRedux = memo(({todoListId, task, entityStatus}: TaskWithReduxPropsType) => {
+export const Task = memo(({todoListId, task, entityStatus}: TaskPropsType) => {
 
     const dispatch = useAppDispatch();
 
     const removeTaskHandler = () => dispatch(removeTaskTC(todoListId, task.id));
+
     const changeStatusHandler = (isDone: boolean) => {
         const status = isDone ? TaskStatuses.Completed : TaskStatuses.New
         dispatch(updateTaskTC(todoListId, task.id, {status}));
     }
+
     const updateTaskHandler = (newTitle: string) => {
         dispatch(updateTaskTC(todoListId, task.id, {title: newTitle}));
     }

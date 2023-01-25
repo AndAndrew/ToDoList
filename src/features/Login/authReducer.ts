@@ -4,7 +4,7 @@ import {authAPI, LoginParamsType} from "../../api/authAPI";
 import {handleServerAppError, handleServerNetworkError} from "../../utils/errorUtils";
 
 const initialState = {
-    isLoggedIn: false
+    isLoggedIn: false,
 }
 type InitialStateType = typeof initialState
 

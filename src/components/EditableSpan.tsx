@@ -1,13 +1,12 @@
 import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 
 type PropsType = {
-    title: string
-    callBack: (newTitle: string) => void
-    disabled?: boolean
+    title: string,
+    callBack: (newTitle: string) => void,
+    disabled?: boolean,
 }
 
-export const EditableSpan = memo((props: PropsType) => {
-    const {title, callBack} = props
+export const EditableSpan = memo(({title, callBack}: PropsType) => {
     const [edit, setEdit] = useState(false)
     const [newTitle, setNewTitle] = useState(title)
 
@@ -33,6 +32,6 @@ export const EditableSpan = memo((props: PropsType) => {
         edit
             ? <input onKeyDown={onKeyDownHandler} onBlur={toggleHandler} onChange={onChangeHandler} autoFocus
                      value={newTitle}/>
-            : <span onDoubleClick={toggleHandler}>{props.title}</span>
+            : <span onDoubleClick={toggleHandler}>{title}</span>
     )
 })

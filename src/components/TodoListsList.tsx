@@ -1,5 +1,5 @@
 import Grid from "@mui/material/Grid";
-import {AddItemForm} from "./AddItemForm";
+import {AddItemForm} from "./addItemForm/AddItemForm";
 import {
     addTodoListTC,
     changeFilterAC,
@@ -12,20 +12,24 @@ import {TodoList} from "./TodoList";
 import React, {useCallback, useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../app/hooks";
 import {Navigate} from "react-router-dom";
+import {TasksStateType} from "../reducers/tasksReducer";
 
 export const TodoListsList = () => {
 
     const dispatch = useAppDispatch()
+
     useEffect(() => {
         dispatch(fetchTodoListsTC())
     }, [dispatch])
-    const todoLists = useAppSelector(state => state.todoLists)
-    const tasks = useAppSelector(state => state.tasks)
-    const isLoggedIn = useAppSelector(state => state.auth.isLoggedIn)
+
+    const todoLists = useAppSelector<Array<TodoListDomainType>>(state => state.todoLists)
+    const tasks = useAppSelector<TasksStateType>(state => state.tasks)
+    const isLoggedIn = useAppSelector<boolean>(state => state.auth.isLoggedIn)
 
     const addTodoList = useCallback((newTitle: string) => {
         dispatch(addTodoListTC(newTitle))
     }, [dispatch])
+
     const changeFilter = useCallback((todoListID: string, filterValue: FilterValuesType) => {
         dispatch(changeFilterAC(todoListID, filterValue))
     }, [dispatch])

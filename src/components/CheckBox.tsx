@@ -2,20 +2,20 @@ import React, {ChangeEvent} from "react";
 import {Checkbox} from "@mui/material";
 
 type PropsType = {
-    isDone: boolean
-    callBack: (isDone: boolean) => void
+    isDone: boolean,
+    callBack: (isDone: boolean) => void,
 }
 
-export const CheckBox = (props: PropsType) => {
+export const CheckBox = ({isDone, callBack}: PropsType) => {
 
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        props.callBack(event.currentTarget.checked)
+        callBack(event.currentTarget.checked)
     }
 
     return (
         <Checkbox size="small"
                   onChange={onChangeHandler}
-                  checked={props.isDone}
+                  checked={isDone}
                   color={'warning'}/>
     );
 }

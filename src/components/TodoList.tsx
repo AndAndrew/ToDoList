@@ -1,12 +1,17 @@
 import React, {memo, useCallback, useEffect} from "react";
-import {UniversalButton} from "./UniversalButton";
-import {AddItemForm} from "./AddItemForm";
+import {UniversalButton} from "./button/UniversalButton";
+import {AddItemForm} from "./addItemForm/AddItemForm";
 import {EditableSpan} from "./EditableSpan";
 import {IconButton} from "@mui/material";
 import {Delete} from "@material-ui/icons";
 import {addTaskTC, fetchTasksTC} from "../reducers/tasksReducer";
-import {FilterValuesType, removeTodoListTC, updateTodoListTitleTC} from "../reducers/todoListReducer";
-import {TaskWithRedux} from "./TaskWithRedux";
+import {
+    FilterValuesType,
+    removeTodoListTC,
+    TodoListDomainType,
+    updateTodoListTitleTC
+} from "../reducers/todoListReducer";
+import {Task} from "./Task";
 import {useAppDispatch, useAppSelector} from "../app/hooks";
 import {RequestStatusType} from "../app/appReducer";
 import {TaskStatuses, TaskType} from "../api/tasksAPI";
@@ -19,35 +24,37 @@ type PropsType = {
     filter: FilterValuesType,
 }
 
-export const TodoList = memo((props: PropsType) => {
+export const TodoList = memo(({id, tasks, entityStatus, changeFilter, filter}: PropsType) => {
+
     const dispatch = useAppDispatch();
 
     useEffect(() => {
-        dispatch(fetchTasksTC(props.id))
-    }, [props.id, dispatch])
-    const todo = useAppSelector(state => state.todoLists.find(todo => {
-        return todo && todo.id === props.id
+        dispatch(fetchTasksTC(id))
+    }, [id, dispatch])
+
+    const todo = useAppSelector<TodoListDomainType | undefined>(state => state.todoLists.find(todo => {
+        return todo && todo.id === id
     }));
 
     const filterHandler = (filterValue: FilterValuesType) => {
-        props.changeFilter(props.id, filterValue);
+        changeFilter(id, filterValue);
     }
 
     const updateTodoListHandler = useCallback((newTitle: string) => {
-        dispatch(updateTodoListTitleTC(props.id, newTitle));
-    }, [dispatch, props.id]);
+        dispatch(updateTodoListTitleTC(id, newTitle));
+    }, [dispatch, id]);
     const addTaskHandler = useCallback((newTitle: string) => {
         dispatch(addTaskTC(todo ? todo.id : '', newTitle));
     }, [todo, dispatch]);
-    const removeTodoList = useCallback(() => dispatch(removeTodoListTC(props.id)), [dispatch, props.id]);
+    const removeTodoList = useCallback(() => dispatch(removeTodoListTC(id)), [dispatch, id]);
 
-    const allTodoListTasks = props.tasks;
+    const allTodoListTasks = tasks;
     let tasksForTodolist = allTodoListTasks;
 
-    if (props.filter === 'Active') {
+    if (filter === 'Active') {
         tasksForTodolist = allTodoListTasks.filter(t => t.status === TaskStatuses.New);
     }
-    if (props.filter === 'Completed') {
+    if (filter === 'Completed') {
         tasksForTodolist = allTodoListTasks.filter(t => t.status === TaskStatuses.Completed);
     }
 
@@ -56,41 +63,41 @@ export const TodoList = memo((props: PropsType) => {
             <h3>
                 <EditableSpan title={todo ? todo.title : ''}
                               callBack={(newTitle) => updateTodoListHandler(newTitle)}
-                              disabled={props.entityStatus === 'loading'}/>
+                              disabled={entityStatus === 'loading'}/>
                 <IconButton aria-label="delete"
                             onClick={removeTodoList}
-                            disabled={props.entityStatus === 'loading'}>
+                            disabled={entityStatus === 'loading'}>
                     <Delete/>
                 </IconButton>
             </h3>
-            <AddItemForm label={'Add new task'} callBack={addTaskHandler} disabled={props.entityStatus === 'loading'}/>
+            <AddItemForm label={'Add new task'} callBack={addTaskHandler} disabled={entityStatus === 'loading'}/>
             <ul>
                 {
                     tasksForTodolist.map((t) => {
                         return (
-                            <TaskWithRedux
+                            <Task
                                 key={t.id}
-                                todoListId={props.id}
+                                todoListId={id}
                                 task={t}
-                                entityStatus={props.entityStatus}
+                                entityStatus={entityStatus}
                             />
                         )
                     })}
             </ul>
             <div>
-                <UniversalButton variant={props.filter === 'All' ? 'outlined' : 'text'}
+                <UniversalButton variant={filter === 'All' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('All')
                                  }}
                                  color={'coral'}
                                  nickName={'all'}/>
-                <UniversalButton variant={props.filter === 'Active' ? 'outlined' : 'text'}
+                <UniversalButton variant={filter === 'Active' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('Active')
                                  }}
                                  color={'coral'}
                                  nickName={'active'}/>
-                <UniversalButton variant={props.filter === 'Completed' ? 'outlined' : 'text'}
+                <UniversalButton variant={filter === 'Completed' ? 'outlined' : 'text'}
                                  callBack={() => {
                                      filterHandler('Completed')
                                  }}
